@@ -10,15 +10,16 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
 import temp.pifcharts.dto.Data;
+import temp.pifcharts.dto.PifSeries;
 
 /**
  * @author Mikhail
  */
 public class DatasetProvider {
-    public TimeSeriesCollection createDataset(List<Data> data, LocalDate from) {
+    public TimeSeriesCollection createDataset(List<PifSeries> data, LocalDate from) {
         TimeSeriesCollection collection = new TimeSeriesCollection();
-        for (Data datum : data) {
-            collection.addSeries(getSeries(datum, from));
+        for (PifSeries datum : data) {
+            collection.addSeries(getSeries(datum.getData(), from));
         }
         return collection;
     }

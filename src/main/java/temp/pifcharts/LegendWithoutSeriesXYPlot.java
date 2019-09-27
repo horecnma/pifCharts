@@ -48,6 +48,11 @@ public class LegendWithoutSeriesXYPlot extends XYPlot {
         setRangeAxisLocation(AxisLocation.TOP_OR_RIGHT);
     }
 
+    @Override
+    public TimeSeriesCollection getDataset() {
+        return (TimeSeriesCollection) super.getDataset();
+    }
+
     public void updateDomainMarkers(LocalDate startDate) {
         clearDomainMarkers();
         getDomainAxis().setAutoRange(true);

@@ -1,37 +1,30 @@
 package temp.pifcharts;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.AbstractAction;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JWindow;
-import javax.swing.SwingConstants;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
-import temp.pifcharts.dto.Data;
+import org.jfree.data.time.TimeSeries;
+
+import temp.pifcharts.dto.PifSeries;
 
 /**
  * @author Mikhail
  */
 public class Application {
-    private static DataDownloader dataDownloader = new DataDownloader();
-    private static DatasetProvider datasetProvider = new DatasetProvider();
+    private static final DataDownloader dataDownloader = new DataDownloader();
+    private static final DatasetProvider datasetProvider = new DatasetProvider();
 
     public static void main(String[] args)
             throws Exception {
         JWindow splash = createSplash();
         try {
-            List<Data> data = dataDownloader.getData(LocalDate.now().minusYears(5));
+            List<PifSeries> data = dataDownloader.getData(LocalDate.now().minusYears(5));
 
             PifsChartPanel chart = new PifsChartPanel();
             LegendWithoutSeriesXYPlot plot = chart.getPlot();
@@ -70,13 +63,25 @@ public class Application {
     }
 
     private static JRadioButton newButton(
-            boolean selected, List<Data> data, LegendWithoutSeriesXYPlot plot, String title, LocalDate localDate, ButtonGroup bg
+            boolean selected, List<PifSeries> data, LegendWithoutSeriesXYPlot plot, String title, LocalDate localDate, ButtonGroup bg
     ) {
         JRadioButton button = new JRadioButton(new AbstractAction(title) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 plot.setDataset(datasetProvider.createDataset(data, localDate));
                 plot.updateDomainMarkers(localDate);
+                colorLines(plot, data);
+            }
+
+            private void colorLines(LegendWithoutSeriesXYPlot plot, List<PifSeries> data) {
+                for (int i = 0; i < plot.getSeriesCount(); i++) {
+                    TimeSeries series = plot.getDataset().getSeries(i);
+                    Color color = data.stream()
+                                      .filter(it -> it.getData().getName().equals(series.getKey()))
+                                      .findFirst().map(PifSeries::getColor)
+                                      .orElseThrow(IllegalArgumentException::new);
+                    plot.getRenderer().setSeriesPaint(i, color);
+                }
             }
         });
         if (selected) {
