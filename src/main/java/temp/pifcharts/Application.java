@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.*;
 
@@ -76,11 +77,12 @@ public class Application {
             private void colorLines(LegendWithoutSeriesXYPlot plot, List<PifSeries> data) {
                 for (int i = 0; i < plot.getSeriesCount(); i++) {
                     TimeSeries series = plot.getDataset().getSeries(i);
-                    Color color = data.stream()
-                                      .filter(it -> it.getData().getName().equals(series.getKey()))
-                                      .findFirst().map(PifSeries::getColor)
-                                      .orElseThrow(IllegalArgumentException::new);
-                    plot.getRenderer().setSeriesPaint(i, color);
+                    Optional<Color> color = data.stream()
+                                                .filter(it -> it.getData().getName().equals(series.getKey()))
+                                                .findFirst().map(PifSeries::getColor);
+                    if (color.isPresent()) {
+                        plot.getRenderer().setSeriesPaint(i, color.get());
+                    }
                 }
             }
         });

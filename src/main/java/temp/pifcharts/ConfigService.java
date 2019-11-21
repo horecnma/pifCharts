@@ -36,7 +36,7 @@ public class ConfigService {
             new SeriesConfig(new Color(0xc0c000), "2225", "gold", true),
             new SeriesConfig(new Color(0xc00000), "803", "potrebSector", true),
             new SeriesConfig(new Color(0xff4040), "2233", "globInternet", true),
-            new SeriesConfig(new Color(0xc000c0), "640", "telecomAndTech", true),
+            new SeriesConfig(new Color(0xc000c0), "640", "telecomAndTech", false),
             new SeriesConfig(new Color(0x404040), "366", "perspect", true),
             new SeriesConfig(new Color(0x55ffff), "642", "electroenerg", true)
     );

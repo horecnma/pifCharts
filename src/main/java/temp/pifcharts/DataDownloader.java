@@ -2,7 +2,6 @@ package temp.pifcharts;
 
 import java.awt.*;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -11,6 +10,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,19 +32,13 @@ public class DataDownloader {
 
     public List<PifSeries> getData(LocalDate fromDate)
             throws Exception {
-        List<SeriesConfig> configs = configService.getConfigs();
-        return download(configs, fromDate);
-    }
-
-    private List<PifSeries> download(List<SeriesConfig> configs, LocalDate fromDate)
-            throws MalformedURLException {
         String from = fromDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        String template = "https://investfunds.ru/funds/#########/?action=chartData&data_key=pay&date_from=" + from;
+        String template = "https://investfunds.ru/funds/#########/?action=chartData&currencyId=1&data_key=pay&date_from=" + from+"&ids%5B%5D=#########";
 
         List<PifSeries> result = new ArrayList<>();
-        for (SeriesConfig config : configs) {
+        for (SeriesConfig config : configService.getConfigs()) {
             if (config.isEnabled()) {
-                URL url = new URL(template.replace("#########", config.getPifInvestId()));
+                URL url = new URL(template.replaceAll("#########", config.getPifInvestId()));
                 Data data = downloadUrl(url);
                 result.add(new PifSeries(config.getColor(), data));
             }
@@ -54,10 +48,19 @@ public class DataDownloader {
 
     private Data downloadUrl(URL url) {
         try {
-            return objectMapper.readValue(url, Data.class);
+            List<Data> data = objectMapper.readValue(url, new TypeReference<List<Data>>(){});
+            validate(url, data.get(0));
+            return data.get(0);
         } catch (Exception e) {
+            System.out.println("error in " + url);
             e.printStackTrace();
             throw new IllegalStateException(e);
+        }
+    }
+
+    private void validate(URL url, Data data) {
+        if (data.getName() == null || data.getName().equals("")) {
+            throw new IllegalArgumentException("empty name in " + url);
         }
     }
 
