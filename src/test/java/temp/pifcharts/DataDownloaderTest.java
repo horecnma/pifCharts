@@ -12,7 +12,8 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import temp.pifcharts.dto.PifSeries;
+import temp.pifcharts.data.DataDownloader;
+import temp.pifcharts.dto.ChartSeries;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -43,8 +44,8 @@ public class DataDownloaderTest {
     public void shouldParseInputData()
             throws Exception {
         LocalDate dummyDate = LocalDate.now();
-        List<PifSeries> data = test.getData(dummyDate);
+        List<ChartSeries<Long>> data = test.getData(dummyDate);
         assert data.size() > 0;
-        assert data.get(0).getData().getName().length() > 0;
+        assert data.get(0).getName().length() > 0;
     }
 }

@@ -6,11 +6,13 @@ import java.util.List;
 
 
 /**
+ * Data with absolute values from external source
+ *
  * @author Mikhail
  */
-public class Data {
+public class PifInvestData {
     private String name;
-    private List<long[]> data = new ArrayList<long[]>();
+    private List<long[]> data = new ArrayList<>();
 
     public String getName() {
         return name;

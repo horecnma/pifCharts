@@ -1,4 +1,4 @@
-package temp.pifcharts;
+package temp.pifcharts.data;
 
 import java.awt.*;
 import java.io.IOException;
@@ -19,36 +19,47 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
-import temp.pifcharts.dto.Data;
-import temp.pifcharts.dto.PifSeries;
+import temp.pifcharts.configs.ConfigService;
+import temp.pifcharts.dto.PifInvestData;
+import temp.pifcharts.dto.ChartSeries;
 import temp.pifcharts.dto.SeriesConfig;
 
 /**
  * @author Mikhail
  */
 public class DataDownloader {
-    private final ObjectMapper objectMapper = createMapper();
-    private final ConfigService configService = new ConfigService();
+    private ObjectMapper objectMapper = createMapper();
+    private ConfigService configService = new ConfigService();
 
-    public List<PifSeries> getData(LocalDate fromDate)
+    public DataDownloader() {
+        ObjectMapper objectMapper = createMapper();
+        ConfigService configService = new ConfigService();
+    }
+
+    public DataDownloader(ObjectMapper objectMapper, ConfigService configService) {
+        this.objectMapper = objectMapper;
+        this.configService = configService;
+    }
+
+    public List<ChartSeries<Long>> getData(LocalDate fromDate)
             throws Exception {
         String from = fromDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         String template = "https://investfunds.ru/funds/#########/?action=chartData&currencyId=1&data_key=pay&date_from=" + from+"&ids%5B%5D=#########";
 
-        List<PifSeries> result = new ArrayList<>();
+        List<ChartSeries<Long>> result = new ArrayList<>();
         for (SeriesConfig config : configService.getConfigs()) {
             if (config.isEnabled()) {
                 URL url = new URL(template.replaceAll("#########", config.getPifInvestId()));
-                Data data = downloadUrl(url);
-                result.add(new PifSeries(config.getColor(), data));
+                PifInvestData data = downloadUrl(url);
+                result.add(ChartSeries.createChartSeries(config.getColor(), data));
             }
         }
         return result;
     }
 
-    private Data downloadUrl(URL url) {
+    private PifInvestData downloadUrl(URL url) {
         try {
-            List<Data> data = objectMapper.readValue(url, new TypeReference<List<Data>>(){});
+            List<PifInvestData> data = objectMapper.readValue(url, new TypeReference<List<PifInvestData>>(){});
             validate(url, data.get(0));
             return data.get(0);
         } catch (Exception e) {
@@ -58,7 +69,7 @@ public class DataDownloader {
         }
     }
 
-    private void validate(URL url, Data data) {
+    private void validate(URL url, PifInvestData data) {
         if (data.getName() == null || data.getName().equals("")) {
             throw new IllegalArgumentException("empty name in " + url);
         }

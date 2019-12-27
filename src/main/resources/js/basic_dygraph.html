@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Line Chart</title>
+    <script src="dygraph/dygraph.js"></script>
+    <script src="jquery/jquery-2.2.4.js"></script>
+    <link rel="stylesheet" href="dygraph/dygraph.css"/>
+    <script charset="utf8" src="data.js"></script>
+    <script charset="utf8" src="data_json.js"></script>
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .dygraph-legend {
+            left: 70px !important;
+            width: 800px;
+            background-color: rgba(256, 256, 256, 0.0);
+        }
+    </style>
+</head>
+
+<body>
+<div id="status" style="width:700px; font-size:0.8em; padding-top:5px;"></div>
+<div id="graph" style="margin-right: 50px; width: 90%; height: 800px;"></div>
+
+<br>
+<br>
+<script>
+
+    var allTimes = datajson.flatMap((it) => it.data.map((it2) => it2[0]));
+    console.debug(allTimes.length);
+    allTimes = Array.from(new Set(allTimes)).sort();
+    console.debug(allTimes.length);
+    console.debug("");
+    for (let i = 0; i < allTimes.length; i++) {
+        console.debug(allTimes[i]);
+    }
+
+    var result = []
+    for (let allTimesIndex = 0; allTimesIndex < allTimes.length; allTimesIndex++) {
+        let row = [allTimes[allTimesIndex]];
+        for (let seriesIndex = 0; seriesIndex < datajson.length; seriesIndex++) {
+            var series = datajson[seriesIndex];
+            var index = allTimesIndex;
+            var k = allTimesIndex;
+            while (k < series.data.length && allTimes[allTimesIndex] < series.data[k][0]) {
+                k++;
+            }
+            if (k >= series.data.length) {
+                row.push(-500);
+            } else {
+                row.push(series.data[k][1]);
+            }
+        }
+        result.push(row);
+    }
+
+
+    $(document).ready(function () {
+            new Dygraph(
+                document.getElementById('graph'),
+                result,
+                {
+                    // customBars: true,
+                    // labelsDiv: document.getElementById('status'),
+                    title: 'Daily Temperatures in New York vs. San Francisco',
+                    legend: 'always',
+                    showRangeSelector: true,
+                    delimiter: ",",
+
+                    labelsSeparateLines: true,
+                    highlightSeriesBackgroundAlpha: 0.9,
+                    strokeWidth: 1.4,
+
+                    // strokeBorderWidth: 2,
+                    // highlightCircleSize: 2,
+                    highlightSeriesOpts: {
+                        strokeWidth: 3,
+                        strokeBorderWidth: 1,
+                        highlightCircleSize: 5
+                    },
+
+                    series: {
+                        mySeriesName: {
+                            color: "green",    //Accepts CSS colour values.
+
+                            //There are other properties you can set too:
+                            strokeWidth: 3,
+                            drawPoints: true,
+                            pointSize: 5,
+                            highlightCircleSize: 7
+                        }
+                    },
+
+                    xValueParser: function (x) {
+                        let number = parseInt(x);
+                        console.debug("number");
+                        return number;
+                    },
+                    axis: {
+                        x: {
+                            valueFormatter: Dygraph.dateString_,
+                            ticker: Dygraph.dateTicker
+                        },
+                        y2: {}
+                    },
+
+                    ylabel: 'Primary y-axis',
+                    y2label: 'Secondary y-axis'
+                    // labels: d[0  ].data.map((a) => new Date(a[0]))
+                }
+            );
+        }
+    );
+
+</script>
+</body>
+
+</html>

@@ -1,25 +1,35 @@
-package temp.pifcharts;
+package temp.pifcharts.gui;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.Date;
 
 import org.jfree.chart.LegendItem;
 import org.jfree.chart.LegendItemCollection;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.DateTick;
 import org.jfree.chart.axis.DateTickUnit;
 import org.jfree.chart.axis.DateTickUnitType;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueTick;
+import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.SamplingXYLineRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.chart.ui.TextAnchor;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
+
+import temp.pifcharts.Application;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -42,10 +52,13 @@ public class LegendWithoutSeriesXYPlot extends XYPlot {
                     }
                 }
         );
-        //noinspection OverridableMethodCallDuringObjectConstruction
+    }
+
+    public LegendWithoutSeriesXYPlot init() {
         addRangeMarker(new ValueMarker(0, Color.BLACK, new BasicStroke(0.5f)));
-        //noinspection OverridableMethodCallDuringObjectConstruction
         setRangeAxisLocation(AxisLocation.TOP_OR_RIGHT);
+        getRenderer().setDefaultToolTipGenerator(new StandardXYToolTipGenerator("{0} - {2} ({1})", new SimpleDateFormat("HH:mm:ss"), NumberFormat.getNumberInstance()));
+        return this;
     }
 
     @Override
@@ -124,4 +137,11 @@ public class LegendWithoutSeriesXYPlot extends XYPlot {
         }
         return result;
     }
+
+    public void drawMouseLine(Rectangle2D plotArea, Graphics graphics, Date date) {
+        java.util.List<ValueTick> tickList = new ArrayList<>();
+        tickList.add(new DateTick(date, "asdfasdfd", TextAnchor.BASELINE_CENTER, TextAnchor.BASELINE_CENTER, 0));
+        drawDomainTickBands((Graphics2D) graphics, plotArea, tickList);
+    }
+
 }

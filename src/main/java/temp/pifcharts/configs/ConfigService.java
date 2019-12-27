@@ -1,4 +1,4 @@
-package temp.pifcharts;
+package temp.pifcharts.configs;
 
 import java.awt.*;
 import java.io.File;
@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import temp.pifcharts.dto.SeriesConfig;
 
-import static temp.pifcharts.DataDownloader.createMapper;
+import static temp.pifcharts.data.DataDownloader.createMapper;
 
 /**
  * @author Mikhail
@@ -23,13 +23,13 @@ public class ConfigService {
     private static List<SeriesConfig> DEFAULT_CONFIG = Arrays.asList(
             new SeriesConfig(new Color(0xff5555), "43", "Dobrynya_Nikitich", false),
             new SeriesConfig(new Color(0x0000c0), "641", "prirResource", true),
-            new SeriesConfig(new Color(0x5555ff), "5247", "mosBirgaBrutto", true),
+            new SeriesConfig(new Color(0x5555ff), "5247", "mosBirgaBrutto", false),
 
             new SeriesConfig(new Color(0x55ff55), "2050", "glob_dolg", true),
             new SeriesConfig(new Color(0xffff55), "3125", "euroobligation", false),
 
             new SeriesConfig(new Color(0x00c0c0), "1070", "act_upravlenie", false),
-            new SeriesConfig(new Color(0xffafaf), "47", "Ilia_Muromec", false),
+            new SeriesConfig(new Color(0xC8C8C8), "47", "Ilia_Muromec", true),
             new SeriesConfig(new Color(0x808080), "764", "america", false),
             new SeriesConfig(new Color(0x00c000), "45", "sbalansir", true),
             new SeriesConfig(new Color(0xff55ff), "957", "fin_sector", true),
@@ -38,7 +38,7 @@ public class ConfigService {
             new SeriesConfig(new Color(0xff4040), "2233", "globInternet", true),
             new SeriesConfig(new Color(0xc000c0), "640", "telecomAndTech", false),
             new SeriesConfig(new Color(0x404040), "366", "perspect", true),
-            new SeriesConfig(new Color(0x55ffff), "642", "electroenerg", true)
+            new SeriesConfig(new Color(0xB4B4FF), "642", "electroenerg", true)
     );
     private final ObjectMapper objectMapper = createMapper();
 
