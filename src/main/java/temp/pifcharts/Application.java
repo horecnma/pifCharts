@@ -41,7 +41,7 @@ public class Application {
             System.out.println(jsDataset);
 //            String data1 = "var data = " + jsDataset ;
             String data1 = "var data = " + mapper.writeValueAsString(jsDataset) ;
-            FileUtils.write(new File("/home/mnikolaev/work/tempProjects/pifCharts/src/main/resources/js/data.js"), data1);
+            FileUtils.write(new File("/home/mnikolaev/work/tempProjects/pifCharts/src/main/resources/js/data_json.js"), data1);
 
             PifsChartPanel chart = new PifsChartPanel();
             LegendWithoutSeriesXYPlot plot = chart.getPlot();

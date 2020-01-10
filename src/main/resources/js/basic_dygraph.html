@@ -6,7 +6,6 @@
     <script src="dygraph/dygraph.js"></script>
     <script src="jquery/jquery-2.2.4.js"></script>
     <link rel="stylesheet" href="dygraph/dygraph.css"/>
-    <script charset="utf8" src="data.js"></script>
     <script charset="utf8" src="data_json.js"></script>
     <style>
         canvas {
@@ -31,43 +30,61 @@
 <br>
 <script>
 
-    var allTimes = datajson.flatMap((it) => it.data.map((it2) => it2[0]));
-    console.debug(allTimes.length);
-    allTimes = Array.from(new Set(allTimes)).sort();
-    console.debug(allTimes.length);
-    console.debug("");
-    for (let i = 0; i < allTimes.length; i++) {
-        console.debug(allTimes[i]);
-    }
+    let prepareDygraphData = function () {
+        var allTimes = data.flatMap((it) => it.data.map((it2) => it2[0]));
+        console.debug(allTimes.length);
+        allTimes = Array.from(new Set(allTimes)).sort();
+        console.debug(allTimes.length);
+        console.debug("");
+        for (let i = 0; i < allTimes.length; i++) {
+            console.debug(allTimes[i]);
+        }
 
-    var result = []
-    for (let allTimesIndex = 0; allTimesIndex < allTimes.length; allTimesIndex++) {
-        let row = [allTimes[allTimesIndex]];
-        for (let seriesIndex = 0; seriesIndex < datajson.length; seriesIndex++) {
-            var series = datajson[seriesIndex];
-            var index = allTimesIndex;
-            var k = allTimesIndex;
-            while (k < series.data.length && allTimes[allTimesIndex] < series.data[k][0]) {
-                k++;
+        var result = [];
+        // todo insert null values in the begin
+        for (let allTimesIndex = 0; allTimesIndex < allTimes.length; allTimesIndex++) {
+            let row = [new Date(allTimes[allTimesIndex])];
+            for (let seriesIndex = 0; seriesIndex < data.length; seriesIndex++) {
+                var series = data[seriesIndex];
+                var index = allTimesIndex;
+                var k = allTimesIndex;
+                while (k < series.data.length && allTimes[allTimesIndex] < series.data[k][0]) {
+                    k++;
+                }
+                if (k >= series.data.length) {
+                    row.push(null);
+                } else {
+                    row.push(series.data[k][1]);
+                }
             }
-            if (k >= series.data.length) {
-                row.push(-500);
-            } else {
-                row.push(series.data[k][1]);
+            result.push(row);
+        }
+
+        var seriesConf = {};
+        for (let i = 0; i < data.length; i++) {
+            let d = data[i];
+            let name = d.name;
+            let color = d.color;
+            seriesConf[name] = {
+                color: color,    //Accepts CSS colour values.
             }
         }
-        result.push(row);
-    }
-
+        return {
+            columns: ["time"].concat(data.map((it)=>it.name)),
+            seriesProps: seriesConf,
+            data: result
+        };
+    };
+    var result = prepareDygraphData();
 
     $(document).ready(function () {
             new Dygraph(
                 document.getElementById('graph'),
-                result,
+                result.data,
                 {
                     // customBars: true,
                     // labelsDiv: document.getElementById('status'),
-                    title: 'Daily Temperatures in New York vs. San Francisco',
+                    title: 'pifs',
                     legend: 'always',
                     showRangeSelector: true,
                     delimiter: ",",
@@ -76,25 +93,14 @@
                     highlightSeriesBackgroundAlpha: 0.9,
                     strokeWidth: 1.4,
 
-                    // strokeBorderWidth: 2,
-                    // highlightCircleSize: 2,
                     highlightSeriesOpts: {
                         strokeWidth: 3,
                         strokeBorderWidth: 1,
                         highlightCircleSize: 5
                     },
+                    labels: result.columns,
 
-                    series: {
-                        mySeriesName: {
-                            color: "green",    //Accepts CSS colour values.
-
-                            //There are other properties you can set too:
-                            strokeWidth: 3,
-                            drawPoints: true,
-                            pointSize: 5,
-                            highlightCircleSize: 7
-                        }
-                    },
+                    series: result.seriesProps,
 
                     xValueParser: function (x) {
                         let number = parseInt(x);
@@ -111,7 +117,6 @@
 
                     ylabel: 'Primary y-axis',
                     y2label: 'Secondary y-axis'
-                    // labels: d[0  ].data.map((a) => new Date(a[0]))
                 }
             );
         }
