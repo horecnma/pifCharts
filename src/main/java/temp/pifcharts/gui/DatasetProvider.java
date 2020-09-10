@@ -1,4 +1,4 @@
-package temp.pifcharts;
+package temp.pifcharts.gui;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -9,6 +9,7 @@ import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
+import temp.pifcharts.Application;
 import temp.pifcharts.dto.Data;
 import temp.pifcharts.dto.PifSeries;
 

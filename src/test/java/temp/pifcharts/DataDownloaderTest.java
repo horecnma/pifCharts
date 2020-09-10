@@ -13,6 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import temp.pifcharts.dto.PifSeries;
+import temp.pifcharts.services.DataDownloader;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

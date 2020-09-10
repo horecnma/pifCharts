@@ -1,4 +1,4 @@
-package temp.pifcharts;
+package temp.pifcharts.services;
 
 import java.awt.*;
 import java.io.File;
@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import temp.pifcharts.dto.SeriesConfig;
 
-import static temp.pifcharts.DataDownloader.createMapper;
+import static temp.pifcharts.services.DataDownloader.createMapper;
 
 /**
  * @author Mikhail

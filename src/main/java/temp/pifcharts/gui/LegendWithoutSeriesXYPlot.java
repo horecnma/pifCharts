@@ -1,4 +1,4 @@
-package temp.pifcharts;
+package temp.pifcharts.gui;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -20,6 +20,8 @@ import org.jfree.chart.renderer.xy.SamplingXYLineRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
+
+import temp.pifcharts.Application;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 

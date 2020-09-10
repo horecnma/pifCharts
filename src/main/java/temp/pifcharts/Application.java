@@ -1,5 +1,14 @@
 package temp.pifcharts;
 
+import org.jfree.data.time.TimeSeries;
+import temp.pifcharts.dto.PifSeries;
+import temp.pifcharts.gui.DatasetProvider;
+import temp.pifcharts.gui.FrameMonitor;
+import temp.pifcharts.gui.LegendWithoutSeriesXYPlot;
+import temp.pifcharts.gui.PifsChartPanel;
+import temp.pifcharts.services.DataDownloader;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.time.LocalDate;
@@ -7,12 +16,6 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
-import javax.swing.*;
-
-import org.jfree.data.time.TimeSeries;
-
-import temp.pifcharts.dto.PifSeries;
 
 /**
  * @author Mikhail
@@ -44,10 +47,9 @@ public class Application {
             panel.add(buttonPanel, BorderLayout.NORTH);
             panel.add(chart);
             frame.setContentPane(panel);
-            frame.setSize(700, 500);
+            FrameMonitor.registerFrame(frame, "test_pif_chart", 700, 500);
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setVisible(true);
-            frame.setLocationRelativeTo(null);
         } finally {
             splash.dispose();
         }

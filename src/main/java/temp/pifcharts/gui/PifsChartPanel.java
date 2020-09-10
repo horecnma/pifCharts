@@ -1,4 +1,4 @@
-package temp.pifcharts;
+package temp.pifcharts.gui;
 
 import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;

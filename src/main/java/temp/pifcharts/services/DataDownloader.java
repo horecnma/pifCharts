@@ -1,4 +1,4 @@
-package temp.pifcharts;
+package temp.pifcharts.services;
 
 import java.awt.*;
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class DataDownloader {
     public List<PifSeries> getData(LocalDate fromDate)
             throws Exception {
         String from = fromDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        String template = "https://investfunds.ru/funds/#########/?action=chartData&currencyId=1&data_key=pay&date_from=" + from+"&ids%5B%5D=#########";
+        String template = "https://investfunds.ru/funds/#########/?action=chartData&currencyId=1&data_key=pay&date_from=" + from + "&ids%5B%5D=#########";
 
         List<PifSeries> result = new ArrayList<>();
         for (SeriesConfig config : configService.getConfigs()) {
@@ -48,7 +48,7 @@ public class DataDownloader {
 
     private Data downloadUrl(URL url) {
         try {
-            List<Data> data = objectMapper.readValue(url, new TypeReference<List<Data>>(){});
+            List<Data> data = objectMapper.readValue(url, new TypeReference<List<Data>>() {});
             validate(url, data.get(0));
             return data.get(0);
         } catch (Exception e) {
