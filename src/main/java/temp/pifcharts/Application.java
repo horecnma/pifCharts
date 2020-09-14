@@ -23,12 +23,14 @@ import java.util.Optional;
 public class Application {
     private static final DataDownloader dataDownloader = new DataDownloader();
     private static final DatasetProvider datasetProvider = new DatasetProvider();
+    private static final FrameMonitor frameMonitor = new FrameMonitor();
 
     public static void main(String[] args)
             throws Exception {
         JWindow splash = createSplash();
         try {
-            List<PifSeries> data = dataDownloader.getData(LocalDate.now().minusYears(5));
+            LocalDate minDate = LocalDate.now().minusYears(6);
+            List<PifSeries> data = dataDownloader.getData(minDate);
 
             PifsChartPanel chart = new PifsChartPanel();
             LegendWithoutSeriesXYPlot plot = chart.getPlot();
@@ -43,11 +45,11 @@ public class Application {
             buttonPanel.add(newButton(true, data, plot, "6 месяцев", LocalDate.now().minusMonths(6), bg), bg);
             buttonPanel.add(newButton(false, data, plot, "1 год", LocalDate.now().minusYears(1), bg));
             buttonPanel.add(newButton(false, data, plot, "3 года", LocalDate.now().minusYears(3), bg), bg);
-            buttonPanel.add(newButton(false, data, plot, "5 лет", LocalDate.now().minusYears(5), bg), bg);
+            buttonPanel.add(newButton(false, data, plot, "6 лет", minDate, bg), bg);
             panel.add(buttonPanel, BorderLayout.NORTH);
             panel.add(chart);
             frame.setContentPane(panel);
-            FrameMonitor.registerFrame(frame, "test_pif_chart", 700, 500);
+            frameMonitor.registerFrame(frame, "test_pif_chart", 700, 500);
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setVisible(true);
         } finally {
