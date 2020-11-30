@@ -31,14 +31,14 @@ public class ConfigService {
             new SeriesConfig(new Color(0x00c0c0), "1070", "act_upravlenie", false),
             new SeriesConfig(new Color(0xffafaf), "47", "Ilia_Muromec", false),
             new SeriesConfig(new Color(0x808080), "764", "america", false),
-            new SeriesConfig(new Color(0x00c000), "45", "sbalansir", true),
+            new SeriesConfig(new Color(0x55C4FF), "45", "sbalansir", true),
             new SeriesConfig(new Color(0xff55ff), "957", "fin_sector", true),
             new SeriesConfig(new Color(0xc0c000), "2225", "gold", true),
             new SeriesConfig(new Color(0xc00000), "803", "potrebSector", true),
             new SeriesConfig(new Color(0xff4040), "2233", "globInternet", true),
             new SeriesConfig(new Color(0xc000c0), "640", "telecomAndTech", false),
             new SeriesConfig(new Color(0x404040), "366", "perspect", true),
-            new SeriesConfig(new Color(0x55ffff), "642", "electroenerg", true)
+            new SeriesConfig(new Color(0x00c000), "642", "electroenerg", true)
     );
     private final ObjectMapper objectMapper = createMapper();
 
