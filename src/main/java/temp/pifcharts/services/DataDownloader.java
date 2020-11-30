@@ -49,6 +49,7 @@ public class DataDownloader {
     private Data downloadUrl(URL url) {
         try {
             List<Data> data = objectMapper.readValue(url, new TypeReference<List<Data>>() {});
+            data.forEach(it -> it.setName(it.getName().replaceAll("<br>", " ").replaceAll("</br>", " ")));
             validate(url, data.get(0));
             return data.get(0);
         } catch (Exception e) {
