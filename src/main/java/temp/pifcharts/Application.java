@@ -29,7 +29,7 @@ public class Application {
             throws Exception {
         JWindow splash = createSplash();
         try {
-            LocalDate minDate = LocalDate.now().minusYears(6);
+            LocalDate minDate = LocalDate.now().minusYears(15);
             List<PifSeries> data = dataDownloader.getData(minDate);
 
             PifsChartPanel chart = new PifsChartPanel();
@@ -45,7 +45,9 @@ public class Application {
             buttonPanel.add(newButton(true, data, plot, "6 месяцев", LocalDate.now().minusMonths(6), bg), bg);
             buttonPanel.add(newButton(false, data, plot, "1 год", LocalDate.now().minusYears(1), bg));
             buttonPanel.add(newButton(false, data, plot, "3 года", LocalDate.now().minusYears(3), bg), bg);
-            buttonPanel.add(newButton(false, data, plot, "6 лет", minDate, bg), bg);
+            buttonPanel.add(newButton(false, data, plot, "6 лет", LocalDate.now().minusYears(6), bg), bg);
+            buttonPanel.add(newButton(false, data, plot, "10 лет", LocalDate.now().minusYears(10), bg), bg);
+            buttonPanel.add(newButton(false, data, plot, "15 лет", LocalDate.now().minusYears(15), bg), bg);
             panel.add(buttonPanel, BorderLayout.NORTH);
             panel.add(chart);
             frame.setContentPane(panel);

@@ -9,11 +9,7 @@ import java.time.YearMonth;
 
 import org.jfree.chart.LegendItem;
 import org.jfree.chart.LegendItemCollection;
-import org.jfree.chart.axis.AxisLocation;
-import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.axis.DateTickUnit;
-import org.jfree.chart.axis.DateTickUnitType;
-import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.*;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.SamplingXYLineRenderer;
@@ -55,10 +51,16 @@ public class LegendWithoutSeriesXYPlot extends XYPlot {
         return (TimeSeriesCollection) super.getDataset();
     }
 
+    @Override
+    public DateAxis getDomainAxis() {
+        return (DateAxis) super.getDomainAxis();
+    }
+
     public void updateDomainMarkers(LocalDate startDate) {
         clearDomainMarkers();
         getDomainAxis().setAutoRange(true);
         getDomainAxis().setAutoTickUnitSelection(true);
+        getDomainAxis().setTickMarkPosition(DateTickMarkPosition.END);
 
         if (Math.abs(DAYS.between(startDate, LocalDate.now()) - 30) < 10) {
             drawLineMonth(1, startDate);
@@ -67,13 +69,15 @@ public class LegendWithoutSeriesXYPlot extends XYPlot {
         } else if (Math.abs(DAYS.between(startDate, LocalDate.now()) - 180) < 10) {
             drawLineMonth(1, startDate);
         } else if (Math.abs(DAYS.between(startDate, LocalDate.now()) - 365) < 10) {
-            ((DateAxis) getDomainAxis()).setTickUnit(new DateTickUnit(DateTickUnitType.MONTH, 1, new SimpleDateFormat("MMM-yy")));
-        } else if (Math.abs(DAYS.between(startDate, LocalDate.now()) - 1095) < 10) {
-            ((DateAxis) getDomainAxis()).setTickUnit(new DateTickUnit(DateTickUnitType.MONTH, 3, new SimpleDateFormat("MMM-yy")));
+            getDomainAxis().setTickUnit(new DateTickUnit(DateTickUnitType.MONTH, 1, new SimpleDateFormat("MMM-yy")));
+        } else if (Math.abs(DAYS.between(startDate, LocalDate.now()) - 365 * 3) < 10) {
+            getDomainAxis().setTickUnit(new DateTickUnit(DateTickUnitType.MONTH, 3, new SimpleDateFormat("MMM-yy")));
+            drawLineYear(1, startDate);
+        } else if (Math.abs(DAYS.between(startDate, LocalDate.now()) - 365 * 6) < 10) {
+            getDomainAxis().setTickUnit(new DateTickUnit(DateTickUnitType.MONTH, 6, new SimpleDateFormat("MMM-yy")));
             drawLineYear(1, startDate);
         } else {
-            ((DateAxis) getDomainAxis()).setTickUnit(new DateTickUnit(DateTickUnitType.MONTH, 4, new SimpleDateFormat("MMM-yy")));
-            drawLineYear(1, startDate);
+            getDomainAxis().setTickUnit(new DateTickUnit(DateTickUnitType.YEAR, 1, new SimpleDateFormat("yyyy")));
         }
     }
 
